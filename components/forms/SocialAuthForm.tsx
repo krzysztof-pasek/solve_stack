@@ -17,16 +17,11 @@ const SocialAuthForm = () => {
         try {
             await signIn(provider, {
                 redirectTo: ROUTES.HOME,
-                // redirect: false,
             });
         } catch (error) {
             console.log(error);
 
-            toast("An error occurred while signing in", {
-                // description: "Witaj ponownie, Jan!", // podtytuł pod tytułem
-                // duration: 8000, // czas wyświetlania w ms
-                // position: "top-center", // nadpisuje pozycję z Toaster
-            });
+            toast("An error occurred while signing in");
         }
     };
     return (

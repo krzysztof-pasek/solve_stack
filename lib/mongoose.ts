@@ -2,6 +2,8 @@ import mongoose, { Mongoose } from "mongoose";
 
 import logger from "./logger";
 
+import "@/database";
+
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 if (!MONGODB_URI) {
@@ -32,7 +34,7 @@ const dbConnect = async (): Promise<Mongoose> => {
     if (!cached.promise) {
         cached.promise = mongoose
             .connect(MONGODB_URI, {
-                dbName: "devflow",
+                dbName: "SolveStack",
             })
             .then((result) => {
                 logger.info("Connected to MongoDB");
