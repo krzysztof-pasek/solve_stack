@@ -107,8 +107,10 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
                 if (result.success) {
                     toast("Successfully updated question");
 
-                    if (result.data)
-                        router.push(ROUTES.QUESTION(result.data._id));
+                    if (result.success && result.data) {
+                        const question = result.data as { _id: string };
+                        router.push(ROUTES.QUESTION(question._id));
+                    }
                 } else {
                     toast(result.error?.message || "Something went wrong");
                 }
