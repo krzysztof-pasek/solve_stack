@@ -21,10 +21,9 @@ import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 export async function generateMetadata({
     params,
-}: {
-    params: { id: string };
-}): Promise<Metadata> {
-    const { data: q } = await getQuestion({ questionId: params.id });
+}: RouteParams): Promise<Metadata> {
+    const { id } = await params;
+    const { data: q } = await getQuestion({ questionId: id });
 
     if (!q) {
         return {
