@@ -123,7 +123,8 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
                     Write your answer here
                 </h4>
                 <Button
-                    className="btn light-border-2 gap-1.5 rounded-md border px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
+                    className="btn light-border-2 gap-1.5 rounded-md border px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500 cursor-pointer
+                    hover:bg-primary-500/20 "
                     disabled={isAISubmitting}
                     onClick={generateAIAnswer}
                 >
@@ -173,7 +174,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
                     <div className="flex justify-end">
                         <Button
                             type="submit"
-                            className="primary-gradient w-fit"
+                            className="primary-gradient w-fit cursor-pointer"
                         >
                             {isAnswering ? (
                                 <>

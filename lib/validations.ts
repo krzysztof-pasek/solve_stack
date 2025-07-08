@@ -247,7 +247,11 @@ export const ProfileSchema = z.object({
     username: z
         .string()
         .min(3, { message: "username musn't be longer then 100 characters." }),
-    portfolio: z.string().url({ message: "Please provide valid URL" }),
+    portfolio: z
+        .string()
+        .url({ message: "Please provide a valid URL." })
+        .or(z.literal(""))
+        .optional(),
     location: z.string().min(3, { message: "Please provide proper location" }),
     bio: z.string().min(3, {
         message: "Bio must be at least 3 characters.",
@@ -264,7 +268,11 @@ export const UpdateUserSchema = z.object({
     username: z
         .string()
         .min(3, { message: "username musn't be longer then 100 characters." }),
-    portfolio: z.string().url({ message: "Please provide valid URL" }),
+    portfolio: z
+        .string()
+        .url({ message: "Please provide a valid URL." })
+        .or(z.literal(""))
+        .optional(),
     location: z.string().min(3, { message: "Please provide proper location" }),
     bio: z.string().min(3, {
         message: "Bio must be at least 3 characters.",

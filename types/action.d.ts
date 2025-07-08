@@ -124,7 +124,7 @@ interface RecommendationParams {
 
 interface JobFilterParams {
     query: string;
-    page: string;
+    page: string | number;
 }
 
 interface UpdateUserParams {

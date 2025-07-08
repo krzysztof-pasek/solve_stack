@@ -112,7 +112,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
                             {location && (
                                 <ProfileLink
                                     imgUrl="/icons/location.svg"
-                                    title="Portfolio"
+                                    title={location}
                                 />
                             )}
                             <ProfileLink
@@ -132,7 +132,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
                 <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
                     {loggedInUser?.user?.id === id && (
                         <Link href="/profile/edit">
-                            <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3">
+                            <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3 hover:bg-primary-500/20 dark:hover:bg-primary-500/50 cursor-pointer">
                                 Edit Profile
                             </Button>
                         </Link>
@@ -149,11 +149,17 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
 
             <section className="mt-10 flex gap-10">
                 <Tabs defaultValue="top-posts" className="flex-[2]">
-                    <TabsList className="background-light800_dark400 min-h-[42px] p-1">
-                        <TabsTrigger value="top-posts" className="tab">
+                    <TabsList className="background-light800_dark400 min-h-[42px] p-1 ">
+                        <TabsTrigger
+                            value="top-posts"
+                            className="tab cursor-pointer"
+                        >
                             Top Posts
                         </TabsTrigger>
-                        <TabsTrigger value="answers" className="tab">
+                        <TabsTrigger
+                            value="answers"
+                            className="tab cursor-pointer"
+                        >
                             Answers
                         </TabsTrigger>
                     </TabsList>

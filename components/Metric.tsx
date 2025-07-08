@@ -8,11 +8,10 @@ interface Props {
     imgUrl: string;
     alt: string;
     value: string | number;
-    title: string;
+    title?: string;
     href?: string;
     textStyles: string;
     imgStyles?: string;
-
     titleStyles?: string;
 }
 
@@ -24,11 +23,10 @@ const Metric = ({
     href,
     textStyles,
     imgStyles,
-
     titleStyles,
 }: Props) => {
     const metricContent = (
-        <>
+        <div className="flex-center gap-1">
             <Image
                 src={imgUrl}
                 width={16}
@@ -51,7 +49,7 @@ const Metric = ({
                     </span>
                 ) : null}
             </p>
-        </>
+        </div>
     );
 
     return href ? (

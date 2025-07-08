@@ -63,18 +63,6 @@ interface Answer {
     question: string;
 }
 
-interface User {
-    _id: string;
-    name: string;
-    username: string;
-    email: string;
-    bio?: string;
-    image?: string;
-    location?: string;
-    portfolio?: string;
-    reputation?: number;
-}
-
 interface Collection {
     _id: string;
     author: string | Author;
@@ -104,4 +92,33 @@ interface GlobalSearchedItem {
     id: string;
     type: "question" | "answer" | "user" | "tag";
     title: string;
+}
+
+type JobParams = {
+    job_id: string;
+    job_title: string;
+    employer_name: string;
+    employer_logo: string | null;
+    job_employment_type: string;
+    job_description: string;
+    job_apply_link: string;
+    job_is_remote: boolean;
+    job_posted_at_datetime_utc: string;
+    job_location: string;
+    job_city: string;
+    job_country: string;
+    job_min_salary: number | null;
+    job_max_salary: number | null;
+};
+
+interface Country {
+    name: {
+        common: string;
+        official?: string;
+    };
+    cca2: string;
+    flags: {
+        svg: string;
+        png?: string;
+    };
 }

@@ -32,7 +32,7 @@ const CommonFilter = ({
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const paramsFilter = searchParams.get("filter");
+    const paramsFilter = searchParams.get("filter") || "";
 
     const handleUpdateParams = (value: string) => {
         const newUrl = formUrlQuery({
@@ -46,10 +46,7 @@ const CommonFilter = ({
 
     return (
         <div className={cn("relative", containerClasses)}>
-            <Select
-                onValueChange={handleUpdateParams}
-                defaultValue={paramsFilter || undefined}
-            >
+            <Select onValueChange={handleUpdateParams} value={paramsFilter}>
                 <SelectTrigger
                     className={cn(
                         "body-regular no-focus light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5",
