@@ -21,25 +21,39 @@ import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 export async function generateMetadata({
     params,
-}: RouteParams): Promise<Metadata> {
-    const { id } = await params;
+}: {
+    params: { id: string };
+}): Promise<Metadata> {
+    const { data: q } = await getQuestion({ questionId: params.id });
 
-    const { success, data: question } = await getQuestion({ questionId: id });
-
-    if (!success || !question) {
+    if (!q) {
         return {
             title: "Question not found",
-            description: "This question does not exist.",
+            description: "The question you are looking for does not exist.",
         };
     }
 
+    const text = (q?.content?.trim() || "").replace(/<[^>]*>/g, "");
+    const description = text ? text.slice(0, 160) : "A question on Solve-Stack";
+
+    const imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/og?title=${encodeURIComponent(q.title)}`;
+
     return {
-        title: question.title,
-        description: question.content.slice(0, 100),
+        title: q.title,
+        description,
+        openGraph: {
+            title: q.title,
+            description,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/questions/${q._id}`,
+            siteName: "Solve-Stack",
+            images: [{ url: imageUrl, width: 1200, height: 630, alt: q.title }],
+            type: "article",
+        },
         twitter: {
             card: "summary_large_image",
-            title: question.title,
-            description: question.content.slice(0, 100),
+            title: q?.title,
+            description,
+            images: [imageUrl],
         },
     };
 }
