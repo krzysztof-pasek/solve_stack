@@ -37,6 +37,8 @@ export async function generateMetadata({
 
     const imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/og?title=${encodeURIComponent(q.title)}`;
 
+    console.log(imageUrl);
+
     return {
         title: q.title,
         description,
