@@ -42,3 +42,4 @@ next-env.d.ts
 
 shadcnAddCommand.txt
 TODOS.txt
+seedMonthlyStats.cjs

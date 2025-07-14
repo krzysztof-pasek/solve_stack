@@ -44,6 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                             name: existingUser.name,
                             email: existingUser.email,
                             image: existingUser.image,
+                            isAdmin: existingUser.isAdmin,
                         };
                     }
                 }
@@ -54,9 +55,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         async session({ session, token }) {
             session.user.id = token.sub as string;
+            session.user.isAdmin = token.isAdmin as boolean;
             return session;
         },
-        async jwt({ token, account }) {
+        async jwt({ token, user, account }) {
+            if (user) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                token.isAdmin = (user as any).isAdmin ?? false;
+            }
+
+            if (token.sub) {
+                const { data: dbUser } = (await api.users.getById(
+                    token.sub as string
+                )) as ActionResponse<IUserDoc>;
+                if (dbUser) token.isAdmin = dbUser.isAdmin ?? false;
+            }
+
             if (account) {
                 const { data: existingAccount, success } =
                     (await api.accounts.getByProvider(
@@ -94,9 +108,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 providerAccountId: account.providerAccountId,
             })) as ActionResponse;
 
-            if (!success) return false;
-
-            return true;
+            return success;
         },
     },
     secret: process.env.AUTH_SECRET,

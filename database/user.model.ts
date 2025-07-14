@@ -9,6 +9,8 @@ export interface IUser {
     location?: string;
     portfolio?: string;
     reputation?: number;
+    isAdmin?: boolean;
+    bannedUntil?: Date | null;
 }
 
 export interface IUserDoc extends IUser, Document {}
@@ -22,6 +24,8 @@ const UserSchema = new Schema<IUser>(
         location: { type: String },
         portfolio: { type: String },
         reputation: { type: Number, default: 0 },
+        isAdmin: { type: Boolean, default: false },
+        bannedUntil: { type: Date, default: null },
     },
     { timestamps: true }
 );

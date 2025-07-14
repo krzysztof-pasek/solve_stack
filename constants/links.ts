@@ -1,3 +1,5 @@
+import { Home, Users, Flag, HelpCircle, BarChart, List } from "lucide-react";
+
 export const sidebarLinks = [
     {
         imgURL: "/icons/home.svg",
@@ -34,4 +36,18 @@ export const sidebarLinks = [
         route: "/ask-question",
         label: "Ask a question",
     },
+];
+
+export const adminSidebarLinks = [
+    { href: "/dashboard", label: "Overview", icon: Home },
+    { href: "/dashboard/users", label: "Users", icon: Users },
+    { href: "/dashboard/reports", label: "Reports", icon: Flag },
+    {
+        href: "/dashboard/content/questions",
+        label: "Questions",
+        icon: HelpCircle,
+    },
+    { href: "/dashboard/analytics", label: "Analytics", icon: BarChart },
+    { href: "/dashboard/logs", label: "Logs", icon: List },
+    { href: "/dashboard/announcements", label: "Announcements", icon: Home },
 ];

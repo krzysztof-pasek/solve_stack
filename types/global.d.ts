@@ -80,6 +80,8 @@ interface User {
     portfolio?: string;
     reputation?: number;
     createdAt: Date;
+    isAdmin?: boolean;
+    bannedUntil?: Date | null;
 }
 
 interface Badges {
