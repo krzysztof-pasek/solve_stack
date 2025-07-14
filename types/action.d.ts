@@ -139,3 +139,14 @@ interface GlobalSearchParams {
     query: string;
     type: string | null;
 }
+
+interface MakeAdminParams {
+    userId: string;
+}
+
+type BanUserArgs = {
+    params: { userId: string };
+    // How long the ban should last - default 30 days.
+    // Pass 0 or a negative number for a permanent ban.
+    options?: { durationDays?: number };
+};

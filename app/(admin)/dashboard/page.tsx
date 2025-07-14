@@ -16,13 +16,13 @@ export default async function DashboardPage() {
     return (
         <div className="flex flex-col gap-6">
             <h1 className="h1-bold">Overview</h1>
-            <div className="flex flex-wrap gap-6 items-center justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 justify-items-center">
                 <AdminStatsCard name="Users" value={totals.users} />
                 <AdminStatsCard name="Questions" value={totals.questions} />
                 <AdminStatsCard name="Answers" value={totals.answers} />
                 <AdminStatsCard name="Reports" value={totals.reports} />
             </div>
-            <section className="grid gap-6 md:grid-cols-2">
+            <section className="grid gap-6 lg:grid-cols-2">
                 <div className="flex flex-col gap-4">
                     <h2 className="h2-bold text-center">Users per month</h2>
                     <DashboardChart

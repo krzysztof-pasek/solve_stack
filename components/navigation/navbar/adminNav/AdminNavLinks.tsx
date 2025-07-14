@@ -14,8 +14,9 @@ const AdminNavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
         <>
             {adminSidebarLinks.map((item) => {
                 const isActive =
-                    pathname === item.href ||
-                    pathname.startsWith(item.href + "/");
+                    (pathname.includes(item.href) &&
+                        item.href !== "/dashboard") ||
+                    pathname === item.href;
 
                 const linkClass = cn(
                     isActive

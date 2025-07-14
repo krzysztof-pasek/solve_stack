@@ -283,3 +283,7 @@ export const GlobalSearchSchema = z.object({
     query: z.string(),
     type: z.string().nullable().optional(),
 });
+
+export const MakeAdminSchema = z.object({
+    userId: z.string().min(1, "User ID is required"),
+});

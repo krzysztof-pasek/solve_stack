@@ -31,7 +31,7 @@ const AdminSidebar = () => {
                 >
                     <Button
                         type="submit"
-                        className="base-medium w-fit !bg-transparent px-4 py-3 cursor-pointer"
+                        className="base-medium w-fit !bg-transparent px-4 py-3 cursor-pointer mt-4"
                     >
                         <LogOut className="size-5 text-black dark:text-white" />
                         <span className="text-dark300_light900 max-lg:hidden">

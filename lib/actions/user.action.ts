@@ -1,7 +1,9 @@
 "use server";
 
 import { FilterQuery, PipelineStage, Types } from "mongoose";
+import { revalidatePath } from "next/cache";
 
+import { auth } from "@/auth";
 import { Answer, Question, User } from "@/database";
 
 import action from "../handlers/action";
@@ -9,6 +11,7 @@ import handleError from "../handlers/error";
 import { assignBadges } from "../utils";
 import {
     GetUserSchema,
+    MakeAdminSchema,
     PaginatedSearchParamsSchema,
     UpdateUserSchema,
 } from "../validations";
@@ -344,4 +347,84 @@ export async function updateUser(
     } catch (error) {
         return handleError(error) as ErrorResponse;
     }
+}
+
+export async function makeAdmin({
+    params,
+}: {
+    params: MakeAdminParams;
+}): Promise<ActionResponse<void>> {
+    const validationResult = await action({
+        params,
+        schema: MakeAdminSchema,
+        authorize: true,
+    });
+
+    const { userId } = params;
+
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse;
+    }
+
+    try {
+        await User.findByIdAndUpdate(userId, { isAdmin: true });
+        return { success: true, data: undefined };
+    } catch (error) {
+        return handleError(error) as ErrorResponse;
+    }
+}
+
+export async function banUser({ params, options }: BanUserArgs) {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+        return { success: false, message: "Not authenticated." };
+    }
+
+    if (session.user.id === params.userId) {
+        return { success: false, message: "You cannot ban yourself." };
+    }
+
+    const durationDays = options?.durationDays ?? 30;
+
+    const bannedUntil =
+        durationDays === 0
+            ? new Date(Date.now() + 99999 * 86_400_000)
+            : new Date(Date.now() + durationDays * 86_400_000);
+
+    try {
+        await User.findByIdAndUpdate(params.userId, { bannedUntil });
+
+        revalidatePath("/dashboard");
+        return { success: true };
+    } catch (error) {
+        console.error("[banUser]", error);
+        return { success: false, message: "Something went wrong." };
+    }
+}
+
+async function requireAdmin() {
+    const session = await auth();
+    if (!session?.user?.isAdmin) throw new Error("Unauthorized");
+    return session.user;
+}
+
+export async function unbanUser({ params }: { params: { userId: string } }) {
+    await requireAdmin();
+    await User.findByIdAndUpdate(params.userId, { bannedUntil: null });
+    revalidatePath("/dashboard");
+    return { success: true };
+}
+
+export async function revokeAdmin({ params }: { params: { userId: string } }) {
+    const caller = await requireAdmin();
+    if (caller.id === params.userId) {
+        return {
+            success: false,
+            message: "You can’t revoke your own admin role.",
+        };
+    }
+    await User.findByIdAndUpdate(params.userId, { isAdmin: false });
+    revalidatePath("/dashboard");
+    return { success: true };
 }

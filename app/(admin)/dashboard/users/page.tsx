@@ -1,16 +1,14 @@
 import React from "react";
 
-import UserCard from "@/components/cards/UserCard";
+import AdminUserCard from "@/components/cards/AdminUserCard";
 import DataRenderer from "@/components/DataRenderer";
-import CommonFilter from "@/components/filters/CommonFilter";
 import Pagination from "@/components/Pagination";
 import LocalSearch from "@/components/search/LocalSearch";
-import { UserFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { EMPTY_USERS } from "@/constants/states";
 import { getUsers } from "@/lib/actions/user.action";
 
-const Community = async ({ searchParams }: RouteParams) => {
+const AdminUsersPage = async ({ searchParams }: RouteParams) => {
     const { page, pageSize, query, filter } = await searchParams;
 
     const { success, data, error } = await getUsers({
@@ -24,19 +22,15 @@ const Community = async ({ searchParams }: RouteParams) => {
 
     return (
         <div>
-            <h1 className="h1-bold text-dark100_light900">All Users</h1>
+            <h1 className="h1-bold text-dark100_light900">Admin Users Page</h1>
 
             <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
                 <LocalSearch
-                    route={ROUTES.COMMUNITY}
+                    route={ROUTES.ADMIN_USERS}
                     iconPosition="left"
                     imgSrc="/icons/search.svg"
-                    placeholder="Look for users in the community!"
+                    placeholder="Look for users..."
                     otherClasses="flex-1"
-                />
-                <CommonFilter
-                    filters={UserFilters}
-                    otherClasses="min-h-[56px] sm:min-w-[170px]"
                 />
             </div>
 
@@ -46,9 +40,9 @@ const Community = async ({ searchParams }: RouteParams) => {
                 data={users}
                 empty={EMPTY_USERS}
                 render={(users) => (
-                    <div className="mt-12 flex flex-wrap gap-5">
+                    <div className="mt-12 flex flex-wrap gap-5 w-full">
                         {users.map((user) => (
-                            <UserCard key={user._id} {...user} />
+                            <AdminUserCard key={user._id} {...user} />
                         ))}
                     </div>
                 )}
@@ -59,4 +53,4 @@ const Community = async ({ searchParams }: RouteParams) => {
     );
 };
 
-export default Community;
+export default AdminUsersPage;
