@@ -1,4 +1,4 @@
-import { Home, Users, Flag, BarChart, List } from "lucide-react";
+import { Home, Users, Flag } from "lucide-react";
 
 export const sidebarLinks = [
     {
@@ -42,7 +42,5 @@ export const adminSidebarLinks = [
     { href: "/dashboard", label: "Overview", icon: Home },
     { href: "/dashboard/users", label: "Users", icon: Users },
     { href: "/dashboard/reports", label: "Reported questions", icon: Flag },
-    { href: "/dashboard/analytics", label: "Analytics", icon: BarChart },
-    { href: "/dashboard/logs", label: "Logs", icon: List },
     { href: "/dashboard/announcements", label: "Announcements", icon: Home },
 ];

@@ -15,10 +15,17 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { deleteAnswer } from "@/lib/actions/answer.action";
 import {
     adminDeleteQuestion,
     deleteQuestion,
+    revokeReport,
 } from "@/lib/actions/question.action";
 
 interface Props {
@@ -49,6 +56,18 @@ const EditDeleteAction = ({ type, itemId, isAdmin = false }: Props) => {
         }
     };
 
+    const handleRevokeReport = async () => {
+        try {
+            const response = await revokeReport({ questionId: itemId });
+            if (response.success) {
+                toast("Report revoked successfully.");
+            } else {
+                toast.error("Failed to revoke report.");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
     return (
         <div
             className={`flex items-center justify-end gap-3 max-sm:w-full ${type === "Answer" && "gap-0 justify-center"}`}
@@ -98,6 +117,26 @@ const EditDeleteAction = ({ type, itemId, isAdmin = false }: Props) => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+            <Dialog>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <DialogTrigger asChild>
+                            <Image
+                                src="/icons/dismiss.svg"
+                                alt="trash"
+                                width={18}
+                                height={18}
+                                className="cursor-pointer dark:invert dark:brightness-0"
+                                onClick={handleRevokeReport}
+                            />
+                        </DialogTrigger>
+                    </TooltipTrigger>
+
+                    <TooltipContent side="bottom">
+                        <p>Dismiss report</p>
+                    </TooltipContent>
+                </Tooltip>
+            </Dialog>
         </div>
     );
 };

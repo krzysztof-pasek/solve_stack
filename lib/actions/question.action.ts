@@ -678,3 +678,38 @@ export async function adminDeleteQuestion(
         return handleError(error) as ErrorResponse;
     }
 }
+
+export async function revokeReport(
+    params: ReportQuestionParams
+): Promise<ActionResponse<{ reports: number }>> {
+    const validationResult = await action({
+        params,
+        schema: ReportQuestionSchema,
+        authorize: true,
+    });
+
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse;
+    }
+
+    const { questionId } = validationResult.params!;
+
+    try {
+        await dbConnect();
+
+        const updated = (await Question.findByIdAndUpdate(
+            questionId,
+            { $set: { reports: 0 } },
+            { new: true }
+        )) as IQuestionDoc | null;
+
+        if (!updated) throw new Error("Question not found");
+
+        return {
+            success: true,
+            data: { reports: updated.reports },
+        };
+    } catch (error) {
+        return handleError(error) as ErrorResponse;
+    }
+}
