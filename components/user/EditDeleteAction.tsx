@@ -16,14 +16,18 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { deleteAnswer } from "@/lib/actions/answer.action";
-import { deleteQuestion } from "@/lib/actions/question.action";
+import {
+    adminDeleteQuestion,
+    deleteQuestion,
+} from "@/lib/actions/question.action";
 
 interface Props {
     type: string;
     itemId: string;
+    isAdmin?: boolean;
 }
 
-const EditDeleteAction = ({ type, itemId }: Props) => {
+const EditDeleteAction = ({ type, itemId, isAdmin = false }: Props) => {
     const router = useRouter();
 
     const handleEdit = async () => {
@@ -32,9 +36,12 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
 
     const handleDelete = async () => {
         if (type === "Question") {
-            await deleteQuestion({ questionId: itemId });
-
-            toast("Your question has been deleted successfully.");
+            if (isAdmin) {
+                await adminDeleteQuestion({ questionId: itemId });
+            } else {
+                await deleteQuestion({ questionId: itemId });
+            }
+            toast("Question deleted successfully.");
         } else if (type === "Answer") {
             await deleteAnswer({ answerId: itemId });
 
@@ -46,7 +53,7 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
         <div
             className={`flex items-center justify-end gap-3 max-sm:w-full ${type === "Answer" && "gap-0 justify-center"}`}
         >
-            {type === "Question" && (
+            {type === "Question" && !isAdmin && (
                 <Image
                     src="/icons/edit.svg"
                     alt="edit"

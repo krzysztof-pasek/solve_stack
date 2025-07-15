@@ -603,3 +603,78 @@ export async function getReportedQuestions(
         return handleError(error) as ErrorResponse;
     }
 }
+
+export async function adminDeleteQuestion(
+    params: DeleteQuestionParams
+): Promise<ActionResponse> {
+    const validationResult = await action({
+        params,
+        schema: DeleteQuestionSchema,
+        authorize: true,
+    });
+
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse;
+    }
+
+    const { questionId } = validationResult.params!;
+    const { user } = validationResult.session!;
+
+    if (!user?.isAdmin) {
+        return handleError(new Error("Unauthorized")) as ErrorResponse;
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const question = await Question.findById(questionId).session(session);
+        if (!question) throw new Error("Question not found");
+
+        await Collection.deleteMany({ question: questionId }, { session });
+        await TagQuestion.deleteMany({ question: questionId }, { session });
+
+        if (question.tags.length > 0) {
+            await Tag.updateMany(
+                { _id: { $in: question.tags } },
+                { $inc: { questions: -1 } },
+                { session }
+            );
+        }
+
+        await Vote.deleteMany(
+            { actionId: questionId, actionType: "question" },
+            { session }
+        );
+
+        const answers = await Answer.find({ question: questionId }).session(
+            session
+        );
+
+        if (answers.length > 0) {
+            await Answer.deleteMany({ question: questionId }).session(session);
+
+            await Vote.deleteMany(
+                {
+                    actionId: { $in: answers.map((a) => a.id) },
+                    actionType: "answer",
+                },
+                { session }
+            );
+        }
+
+        await Question.findByIdAndDelete(questionId).session(session);
+
+        await session.commitTransaction();
+        session.endSession();
+
+        revalidatePath(ROUTES.HOME);
+
+        return { success: true };
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        return handleError(error) as ErrorResponse;
+    }
+}

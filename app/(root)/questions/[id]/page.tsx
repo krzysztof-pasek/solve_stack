@@ -1,15 +1,19 @@
-import { Metadata } from "next";
+// import { Metadata } from "next";
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import React, { Suspense } from "react";
+import { toast } from "sonner";
 
+import { auth } from "@/auth";
 import AllAnswers from "@/components/answers/AllAnswers";
 import TagCard from "@/components/cards/TagCard";
 import { Preview } from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Metric";
 import SaveQuestion from "@/components/question/SaveQuestion";
+import EditDeleteAction from "@/components/user/EditDeleteAction";
 import UserAvatar from "@/components/UserAvatar";
 import Votes from "@/components/votes/Votes";
 import ROUTES from "@/constants/routes";
@@ -19,56 +23,62 @@ import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
-export async function generateMetadata({
-    params,
-}: RouteParams): Promise<Metadata> {
-    const { id } = await params;
-    const { data: q } = await getQuestion({ questionId: id });
+// export async function generateMetadata({
+//     params,
+// }: RouteParams): Promise<Metadata> {
+//     const { id } = await params;
+//     const { data: q } = await getQuestion({ questionId: id });
 
-    if (!q) {
-        return {
-            title: "Question not found",
-            description: "The question you are looking for does not exist.",
-        };
-    }
+//     if (!q) {
+//         return {
+//             title: "Question not found",
+//             description: "The question you are looking for does not exist.",
+//         };
+//     }
 
-    const text = (q?.content?.trim() || "").replace(/<[^>]*>/g, "");
-    const description = text ? text.slice(0, 160) : "A question on Solve-Stack";
+//     const text = (q?.content?.trim() || "").replace(/<[^>]*>/g, "");
+//     const description = text ? text.slice(0, 160) : "A question on Solve-Stack";
 
-    const imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/og?title=${encodeURIComponent(q.title)}`;
+//     const imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/og?title=${encodeURIComponent(q.title)}`;
 
-    console.log(imageUrl);
+//     console.log(imageUrl);
 
-    return {
-        title: q.title,
-        description,
-        openGraph: {
-            title: q.title,
-            description,
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/questions/${q._id}`,
-            siteName: "Solve-Stack",
-            images: [{ url: imageUrl, width: 1200, height: 630, alt: q.title }],
-            type: "article",
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: q?.title,
-            description,
-            images: [imageUrl],
-        },
-    };
-}
+//     return {
+//         title: q.title,
+//         description,
+//         openGraph: {
+//             title: q.title,
+//             description,
+//             url: `${process.env.NEXT_PUBLIC_SITE_URL}/questions/${q._id}`,
+//             siteName: "Solve-Stack",
+//             images: [{ url: imageUrl, width: 1200, height: 630, alt: q.title }],
+//             type: "article",
+//         },
+//         twitter: {
+//             card: "summary_large_image",
+//             title: q?.title,
+//             description,
+//             images: [imageUrl],
+//         },
+//     };
+// }
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     const { id } = await params;
     const { page, pageSize, filter } = await searchParams;
     const { success, data: question } = await getQuestion({ questionId: id });
 
+    const session = await auth();
+    const isAdmin = session?.user?.isAdmin;
+
     after(async () => {
         await incrementViews({ questionId: id });
     });
 
-    if (!success || !question) return redirect("/404");
+    if (!success || !question) {
+        toast.message("Question not found.");
+        return redirect("/");
+    }
 
     const {
         success: areAnswersLoaded,
@@ -131,6 +141,13 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
                                 }
                             />
                         </Suspense>
+                        {isAdmin && (
+                            <EditDeleteAction
+                                type="Question"
+                                itemId={question._id}
+                                isAdmin
+                            />
+                        )}
                     </div>
                 </div>
 
