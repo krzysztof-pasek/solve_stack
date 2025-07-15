@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 import { IUserDoc } from "./database/user.model";
-import { unbanUser } from "./lib/actions/user.action";
 import { api } from "./lib/api";
 
 export const middleware = auth(async (req) => {
@@ -21,10 +20,6 @@ export const middleware = auth(async (req) => {
 
         if (currentUser?.bannedUntil && currentUser.bannedUntil > new Date()) {
             return NextResponse.redirect(new URL("/banned", req.url));
-        }
-
-        if (currentUser?.bannedUntil && currentUser.bannedUntil <= new Date()) {
-            await unbanUser({ params: { userId: String(currentUser._id) } });
         }
     }
 });
