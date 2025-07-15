@@ -22,6 +22,8 @@ import {
     GetQuestionSchema,
     IncrementViewsSchema,
     PaginatedSearchParamsSchema,
+    ReportQuestionParams,
+    ReportQuestionSchema,
 } from "../validations";
 import { createInteraction } from "./interaction.action";
 
@@ -509,4 +511,95 @@ export async function getRecommendedQuestions({
         questions: JSON.parse(JSON.stringify(questions)),
         isNext: total > skip + questions.length,
     };
+}
+
+export async function reportQuestion(
+    params: ReportQuestionParams
+): Promise<ActionResponse<{ reports: number }>> {
+    const validationResult = await action({
+        params,
+        schema: ReportQuestionSchema,
+        authorize: true,
+    });
+
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse;
+    }
+
+    const { questionId } = validationResult.params!;
+
+    try {
+        await dbConnect();
+
+        const updated = (await Question.findByIdAndUpdate(
+            questionId,
+            { $inc: { reports: 1 } },
+            { new: true }
+        )) as IQuestionDoc | null;
+
+        if (!updated) throw new Error("Question not found");
+
+        return {
+            success: true,
+            data: { reports: updated.reports },
+        };
+    } catch (error) {
+        return handleError(error) as ErrorResponse;
+    }
+}
+
+export async function getReportedQuestions(
+    params: PaginatedSearchParams
+): Promise<
+    ActionResponse<{
+        questions: Question[];
+        isNext: boolean;
+    }>
+> {
+    const validationResult = await action({
+        params,
+        schema: PaginatedSearchParamsSchema,
+    });
+
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse;
+    }
+
+    const { page = 1, pageSize = 10, query } = params;
+
+    const skip = (Number(page) - 1) * pageSize;
+    const limit = pageSize;
+
+    const filterQuery: FilterQuery<typeof Question> = {
+        reports: { $gt: 0 },
+    };
+
+    if (query) {
+        filterQuery.$or = [
+            { title: { $regex: query, $options: "i" } },
+            { content: { $regex: query, $options: "i" } },
+        ];
+    }
+
+    try {
+        const totalQuestions = await Question.countDocuments(filterQuery);
+
+        const questions = await Question.find(filterQuery)
+            .populate("tags", "name")
+            .populate("author", "name image")
+            .lean()
+            .sort({ reports: -1, createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        return {
+            success: true,
+            data: {
+                questions: JSON.parse(JSON.stringify(questions)),
+                isNext: totalQuestions > skip + questions.length,
+            },
+        };
+    } catch (error) {
+        return handleError(error) as ErrorResponse;
+    }
 }

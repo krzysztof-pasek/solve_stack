@@ -13,6 +13,7 @@ const ROUTES = {
     SIGN_IN_WITH_OAUTH: `signin-with-oauth`,
     ADMIN_DASHBOARD: "/dashboard",
     ADMIN_USERS: "/dashboard/users",
+    ADMIN_REPORTS: "/dashboard/reports",
 };
 
 export default ROUTES;

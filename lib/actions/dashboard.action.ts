@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { Question, Answer, User, Report, MonthlyStat } from "@/database";
+import { Question, Answer, User, MonthlyStat } from "@/database";
 import { IMonthlyStat } from "@/database/monthStats.model";
 
 import handleError from "../handlers/error";
@@ -24,7 +24,7 @@ export async function getDashboardStats(): Promise<
             User.countDocuments({}),
             Question.countDocuments({}),
             Answer.countDocuments({}),
-            Report.countDocuments({ status: "open" }),
+            Question.countDocuments({ reports: { $gt: 0 } }),
         ]);
 
         return {

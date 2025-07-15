@@ -103,6 +103,7 @@ interface CreateInteractionParams {
         | "edit"
         | "delete"
         | "search";
+
     actionId: string;
     authorId: string;
     actionTarget: "question" | "answer";
@@ -147,6 +148,6 @@ interface MakeAdminParams {
 type BanUserArgs = {
     params: { userId: string };
     // How long the ban should last - default 30 days.
-    // Pass 0 or a negative number for a permanent ban.
+    // Pass 0 for a permanent ban.
     options?: { durationDays?: number };
 };

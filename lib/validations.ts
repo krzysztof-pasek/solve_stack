@@ -287,3 +287,8 @@ export const GlobalSearchSchema = z.object({
 export const MakeAdminSchema = z.object({
     userId: z.string().min(1, "User ID is required"),
 });
+
+export const ReportQuestionSchema = z.object({
+    questionId: z.string().min(1),
+});
+export type ReportQuestionParams = z.infer<typeof ReportQuestionSchema>;

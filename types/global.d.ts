@@ -22,6 +22,7 @@ interface Question {
     answers: number;
     views: number;
     createdAt: Date;
+    reports?: number;
 }
 
 type ActionResponse<T = null> = {

@@ -4,7 +4,6 @@ import Collection from "./collection.model";
 import Interaction from "./interaction.model";
 import MonthlyStat from "./monthStats.model";
 import Question from "./question.model";
-import Report from "./raport.model";
 import TagQuestion from "./tag-question.model";
 import Tag from "./tag.model";
 import User from "./user.model";
@@ -20,6 +19,5 @@ export {
     Tag,
     User,
     Vote,
-    Report,
     MonthlyStat,
 };

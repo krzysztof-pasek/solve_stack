@@ -7,18 +7,31 @@ import { getTimeStamp } from "@/lib/utils";
 import TagCard from "./TagCard";
 import Metric from "../Metric";
 import EditDeleteAction from "../user/EditDeleteAction";
+import ReportAction from "../user/ReportAction";
 
 interface Props {
     question: Question;
     showActionBtns?: boolean;
+    isAdminPage?: boolean;
 }
 
 const QuestionCard = ({
-    question: { _id, title, tags, author, createdAt, upvotes, answers, views },
+    question: {
+        _id,
+        title,
+        tags,
+        author,
+        createdAt,
+        upvotes,
+        answers,
+        views,
+        reports,
+    },
     showActionBtns = false,
+    isAdminPage = false,
 }: Props) => {
     return (
-        <div className=" shadow-light-100 dark:shadow-dark-100 background-light900-darkGradient rounded-[10px] p-9 sm:px-11">
+        <div className="shadow-light-100 dark:shadow-dark-100 background-light900-darkGradient rounded-[10px] p-9 sm:px-11">
             <div className="flex flex-col-reverse items-center justify-between gap-5 sm:flex-row">
                 <div className="flex-1">
                     <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
@@ -31,7 +44,13 @@ const QuestionCard = ({
                         </h3>
                     </Link>
                 </div>
-
+                {!isAdminPage ? (
+                    <ReportAction questionId={_id} />
+                ) : (
+                    <>
+                        <p className="paragraph-semibold">Reports: {reports}</p>
+                    </>
+                )}
                 {showActionBtns && (
                     <EditDeleteAction type="Question" itemId={_id} />
                 )}
