@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
+import AnnouncementWrapper from "@/components/AnnouncementWrapper";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
@@ -30,6 +32,9 @@ const Home = async ({ searchParams }: SearchParams) => {
 
     return (
         <>
+            <Suspense fallback={null}>
+                <AnnouncementWrapper />
+            </Suspense>
             <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
                 <h1 className="h1-bold text-dark100_light900">All Questions</h1>
 

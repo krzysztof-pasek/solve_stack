@@ -292,3 +292,13 @@ export const ReportQuestionSchema = z.object({
     questionId: z.string().min(1),
 });
 export type ReportQuestionParams = z.infer<typeof ReportQuestionSchema>;
+
+export const CreateAnnouncementSchema = z.object({
+    title: z.string().min(5).max(120),
+    body: z.string().min(10),
+    expiresAt: z.coerce.date().refine((d) => d > new Date(), {
+        message: "Expiry must be in the future",
+    }),
+});
+
+export type CreateAnnouncementInput = z.infer<typeof CreateAnnouncementSchema>;

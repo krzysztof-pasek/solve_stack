@@ -125,3 +125,7 @@ interface Country {
         png?: string;
     };
 }
+
+declare global {
+    type Announcement = import("@/models/announcement.model").TAnnouncement;
+}
