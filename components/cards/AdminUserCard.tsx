@@ -64,7 +64,7 @@ const AdminUserCard = ({
 
     const handleUnbanUser = async () => {
         const { success } = await unbanUser({ params: { userId: _id } });
-        toast(success ? "User un-banned" : "Failed to un-ban");
+        toast(success ? "User unbanned" : "Failed to un-ban");
     };
 
     const handleRevokeAdmin = async () => {

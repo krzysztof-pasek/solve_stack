@@ -33,6 +33,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                     if (!existingUser) return null;
 
+                    if (
+                        existingUser.bannedUntil &&
+                        existingUser.bannedUntil > new Date()
+                    ) {
+                        throw new Error("AccountBanned");
+                    }
+
                     const isValidPassword = await bcrypt.compare(
                         password,
                         existingAccount.password!
@@ -91,6 +98,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         async signIn({ user, profile, account }) {
             if (account?.type === "credentials") return true;
             if (!account || !user) return false;
+
+            const { data: dbUser } = (await api.users.getByEmail(
+                user.email!
+            )) as ActionResponse<IUserDoc | null>;
+
+            const bannedUntil = dbUser?.bannedUntil
+                ? new Date(dbUser.bannedUntil)
+                : null;
+
+            if (bannedUntil && bannedUntil > new Date()) {
+                throw new Error("AccountBanned");
+            }
 
             const userInfo = {
                 name: user.name!,

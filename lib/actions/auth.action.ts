@@ -97,6 +97,19 @@ export async function signInWithCredentials(
 
         if (!existingAccount) throw new NotFoundError("Account");
 
+        if (
+            existingUser.bannedUntil && // ma ustawiony ban
+            existingUser.bannedUntil > new Date() // data w przyszłości
+        ) {
+            return {
+                success: false,
+                status: 403,
+                error: {
+                    message: `Konto zablokowane do ${existingUser.bannedUntil.toLocaleDateString("pl-PL")}`,
+                },
+            };
+        }
+
         const passwordMatch = await bcrypt.compare(
             password,
             existingAccount.password
