@@ -144,7 +144,7 @@ export const IncrementViewsSchema = z.object({
 });
 
 export const AnswerSchema = z.object({
-    content: z.string().min(100, { message: "Minimum of 100 characters." }),
+    content: z.string().min(10, { message: "Minimum of 10 characters." }),
 });
 
 export const AnswerServerSchema = AnswerSchema.extend({
