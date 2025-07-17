@@ -12,7 +12,7 @@ export async function generateMetadata({
 }: {
     params: { id: string };
 }): Promise<Metadata> {
-    const { id } = params;
+    const { id } = await params;
     const { success, data: question } = await getQuestion({ questionId: id });
 
     if (!success || !question) {

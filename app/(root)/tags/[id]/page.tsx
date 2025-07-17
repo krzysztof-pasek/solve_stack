@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: {
     params: { id: string };
 }): Promise<Metadata> {
-    const { id } = params;
+    const { id } = await params;
 
     const { success, data } = await getTagQuestions({
         tagId: id,

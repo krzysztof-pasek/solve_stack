@@ -65,32 +65,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             session.user.isAdmin = token.isAdmin as boolean;
             return session;
         },
-        async jwt({ token, user, account }) {
-            if (user) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                token.isAdmin = (user as any).isAdmin ?? false;
+        async jwt({ token, account }) {
+            if (account) {
+                const providerKey =
+                    account.type === "credentials"
+                        ? token.email!
+                        : account.providerAccountId;
+                const { data: acct } = (await api.accounts.getByProvider(
+                    providerKey
+                )) as ActionResponse<IAccountDoc>;
+                if (acct?.userId) {
+                    token.sub = acct.userId.toString();
+                }
             }
 
             if (token.sub) {
                 const { data: dbUser } = (await api.users.getById(
                     token.sub as string
                 )) as ActionResponse<IUserDoc>;
-                if (dbUser) token.isAdmin = dbUser.isAdmin ?? false;
-            }
-
-            if (account) {
-                const { data: existingAccount, success } =
-                    (await api.accounts.getByProvider(
-                        account.type === "credentials"
-                            ? token.email!
-                            : account.providerAccountId
-                    )) as ActionResponse<IAccountDoc>;
-
-                if (!success || !existingAccount) return token;
-
-                const userId = existingAccount.userId;
-
-                if (userId) token.sub = userId.toString();
+                if (dbUser) token.isAdmin = dbUser.isAdmin ?? token.isAdmin;
             }
 
             return token;
