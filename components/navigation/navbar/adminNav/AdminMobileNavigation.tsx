@@ -11,6 +11,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import ROUTES from "@/constants/routes";
 
 import AdminNavLinks from "./AdminNavLinks";
 
@@ -59,6 +60,12 @@ const AdminMobileNavigation = () => {
                     </SheetClose>
 
                     <div className="flex flex-col gap-3">
+                        <Button
+                            className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900"
+                            asChild
+                        >
+                            <Link href={ROUTES.HOME}>Exit Dashboard</Link>
+                        </Button>
                         <SheetClose asChild>
                             <form
                                 action={async () => {
@@ -69,7 +76,7 @@ const AdminMobileNavigation = () => {
                             >
                                 <Button
                                     type="submit"
-                                    className="base-medium w-fit !bg-transparent px-4 py-3"
+                                    className="base-medium w-fit !bg-transparent px-4 py-3 mt-4"
                                 >
                                     <LogOut className="size-5 text-black dark:text-white" />
                                     <span className="text-dark300_light900">

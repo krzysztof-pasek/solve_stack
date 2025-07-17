@@ -117,26 +117,28 @@ const EditDeleteAction = ({ type, itemId, isAdmin = false }: Props) => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-            <Dialog>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <DialogTrigger asChild>
-                            <Image
-                                src="/icons/dismiss.svg"
-                                alt="trash"
-                                width={18}
-                                height={18}
-                                className="cursor-pointer dark:invert dark:brightness-0"
-                                onClick={handleRevokeReport}
-                            />
-                        </DialogTrigger>
-                    </TooltipTrigger>
+            {isAdmin && (
+                <Dialog>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <DialogTrigger asChild>
+                                <Image
+                                    src="/icons/dismiss.svg"
+                                    alt="trash"
+                                    width={18}
+                                    height={18}
+                                    className="cursor-pointer dark:invert dark:brightness-0"
+                                    onClick={handleRevokeReport}
+                                />
+                            </DialogTrigger>
+                        </TooltipTrigger>
 
-                    <TooltipContent side="bottom">
-                        <p>Dismiss report</p>
-                    </TooltipContent>
-                </Tooltip>
-            </Dialog>
+                        <TooltipContent side="bottom">
+                            <p>Dismiss report</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </Dialog>
+            )}
         </div>
     );
 };

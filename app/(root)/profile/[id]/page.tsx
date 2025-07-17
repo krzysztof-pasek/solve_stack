@@ -29,11 +29,10 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
     if (!id) notFound();
 
     const loggedInUser = await auth();
-    console.log("Logged in user:", loggedInUser);
+
     const { success, data, error } = await getUser({
         userId: id,
     });
-    console.log("Logged in user2:", data);
 
     if (!success)
         return (

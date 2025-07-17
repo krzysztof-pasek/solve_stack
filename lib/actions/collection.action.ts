@@ -102,9 +102,12 @@ export async function hasSavedQuestion(
     }
 }
 
-export async function getSavedQuestions(
-    params: PaginatedSearchParams
-): Promise<ActionResponse<{ collection: Collection[]; isNext: boolean }>> {
+export async function getSavedQuestions(params: PaginatedSearchParams): Promise<
+    ActionResponse<{
+        collection: Collection[];
+        isNext: boolean;
+    }>
+> {
     const validationResult = await action({
         params,
         schema: PaginatedSearchParamsSchema,
@@ -116,9 +119,11 @@ export async function getSavedQuestions(
     }
 
     const userId = validationResult.session?.user?.id;
-    const { page = 1, pageSize = 10, query, filter } = params;
+    const page = Number(params.page ?? 1);
+    const pageSize = Number(params.pageSize ?? 10);
+    const { query, filter } = params;
 
-    const skip = (Number(page) - 1) * pageSize;
+    const skip = (page - 1) * pageSize;
     const limit = pageSize;
 
     const sortOptions: Record<string, Record<string, 1 | -1>> = {
@@ -129,12 +134,12 @@ export async function getSavedQuestions(
         mostanswered: { "question.answers": -1 },
     };
 
-    const sortCriteria = sortOptions[filter as keyof typeof sortOptions] || {
+    const sortCriteria = sortOptions[filter as keyof typeof sortOptions] ?? {
         "question.createdAt": -1,
     };
 
     try {
-        const pipeline: PipelineStage[] = [
+        const basePipeline: PipelineStage[] = [
             { $match: { author: new mongoose.Types.ObjectId(userId) } },
             {
                 $lookup: {
@@ -165,7 +170,7 @@ export async function getSavedQuestions(
         ];
 
         if (query) {
-            pipeline.push({
+            basePipeline.push({
                 $match: {
                     $or: [
                         { "question.title": { $regex: query, $options: "i" } },
@@ -180,21 +185,22 @@ export async function getSavedQuestions(
             });
         }
 
-        const [totalCount] = await Collection.aggregate([
-            ...pipeline,
+        const totalCountAgg = await Collection.aggregate([
+            ...basePipeline,
             { $count: "count" },
         ]);
 
-        pipeline.push(
+        const totalCount = totalCountAgg[0]?.count ?? 0;
+
+        const questions = await Collection.aggregate([
+            ...basePipeline,
             { $sort: sortCriteria },
             { $skip: skip },
-            { $limit: limit }
-        );
-        pipeline.push({ $project: { question: 1, author: 1 } });
+            { $limit: limit },
+            { $project: { question: 1, author: 1 } },
+        ]);
 
-        const questions = await Collection.aggregate(pipeline);
-
-        const isNext = totalCount.count > skip + questions.length;
+        const isNext = totalCount > skip + questions.length;
 
         return {
             success: true,

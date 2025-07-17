@@ -7,7 +7,7 @@ import {
 
 export const revalidate = 900;
 
-export default async function DashboardPage() {
+const DashboardPage = async () => {
     const [{ data: totals, success: s1 }, { data: monthly, success: s2 }] =
         await Promise.all([getDashboardStats(), getMonthlyStats()]);
 
@@ -41,4 +41,6 @@ export default async function DashboardPage() {
             </section>
         </div>
     );
-}
+};
+
+export default DashboardPage;

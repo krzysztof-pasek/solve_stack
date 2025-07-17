@@ -18,6 +18,7 @@ import NavLinks from "./NavLinks";
 const MobileNavigation = async () => {
     const session = await auth();
     const userId = session?.user?.id;
+    const isAdmin = session?.user?.isAdmin;
 
     return (
         <Sheet>
@@ -57,25 +58,39 @@ const MobileNavigation = async () => {
 
                     <div className="flex flex-col gap-3">
                         {userId ? (
-                            <SheetClose asChild>
-                                <form
-                                    action={async () => {
-                                        "use server";
+                            <>
+                                {isAdmin && (
+                                    <SheetClose asChild>
+                                        <Button
+                                            className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900"
+                                            asChild
+                                        >
+                                            <Link href="/dashboard">
+                                                Admin Dashboard
+                                            </Link>
+                                        </Button>
+                                    </SheetClose>
+                                )}
 
-                                        await signOut();
-                                    }}
-                                >
-                                    <Button
-                                        type="submit"
-                                        className="base-medium w-fit !bg-transparent px-4 py-3"
+                                <SheetClose asChild>
+                                    <form
+                                        action={async () => {
+                                            "use server";
+                                            await signOut();
+                                        }}
                                     >
-                                        <LogOut className="size-5 text-black dark:text-white" />
-                                        <span className="text-dark300_light900">
-                                            Logout
-                                        </span>
-                                    </Button>
-                                </form>
-                            </SheetClose>
+                                        <Button
+                                            type="submit"
+                                            className="base-medium w-fit !bg-transparent px-4 py-3 mt-4"
+                                        >
+                                            <LogOut className="size-5 text-black dark:text-white" />
+                                            <span className="text-dark300_light900">
+                                                Logout
+                                            </span>
+                                        </Button>
+                                    </form>
+                                </SheetClose>
+                            </>
                         ) : (
                             <>
                                 <SheetClose asChild>

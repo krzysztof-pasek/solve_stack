@@ -272,7 +272,7 @@ export async function getUserStats(params: GetUserParams): Promise<
     const { userId } = params;
 
     try {
-        const [questionStats] = await Question.aggregate([
+        const [questionStatsRaw] = await Question.aggregate([
             { $match: { author: new Types.ObjectId(userId) } },
             {
                 $group: {
@@ -284,7 +284,7 @@ export async function getUserStats(params: GetUserParams): Promise<
             },
         ]);
 
-        const [answerStats] = await Answer.aggregate([
+        const [answerStatsRaw] = await Answer.aggregate([
             { $match: { author: new Types.ObjectId(userId) } },
             {
                 $group: {
@@ -294,6 +294,17 @@ export async function getUserStats(params: GetUserParams): Promise<
                 },
             },
         ]);
+
+        const questionStats = {
+            count: questionStatsRaw?.count ?? 0,
+            upvotes: questionStatsRaw?.upvotes ?? 0,
+            views: questionStatsRaw?.views ?? 0,
+        };
+
+        const answerStats = {
+            count: answerStatsRaw?.count ?? 0,
+            upvotes: answerStatsRaw?.upvotes ?? 0,
+        };
 
         const badges = assignBadges({
             criteria: [

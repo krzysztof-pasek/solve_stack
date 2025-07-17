@@ -22,7 +22,7 @@ const AnnouncementCard = ({ announcement, userId }: Props) => {
     if (hidden) return null;
 
     return (
-        <div className="background-light700_dark300 mx-auto mt-6 max-w-xl rounded-2xl p-6 shadow-lg">
+        <div className="background-light700_dark300 mx-auto mt-6 max-w-xl rounded-2xl p-6 shadow-lg mb-8">
             <h3 className="h3-semibold mb-2">{announcement.title}</h3>
             <p className="body-regular mb-4 whitespace-pre-wrap">
                 {announcement.body}

@@ -25,7 +25,7 @@ import {
 
 import { Button } from "../ui/button";
 
-export default function AdminAnnouncementForm() {
+const AdminAnnouncementForm = () => {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
@@ -132,4 +132,6 @@ export default function AdminAnnouncementForm() {
             </form>
         </Form>
     );
-}
+};
+
+export default AdminAnnouncementForm;
