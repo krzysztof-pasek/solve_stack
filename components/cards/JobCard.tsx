@@ -21,15 +21,18 @@ const JobCard = ({
         ? countriesList
         : [];
 
+    const rawCountry = job.job_country ?? "";
+    const countryCode = rawCountry.toUpperCase();
+
     const countryObj = countries.find(
-        (c) => c.cca2.toUpperCase() === job.job_country.toUpperCase()
+        (c) => c.cca2.toUpperCase() === countryCode
     );
 
     const countryName = countryObj?.name.common ?? job.job_country;
-    const countryCCA2 =
-        countryObj?.cca2.toUpperCase() ?? job.job_country.toUpperCase();
 
-    const flagSrc = `https://flagsapi.com/${job.job_country}/flat/64.png`;
+    const countryCCA2 = countryObj?.cca2.toUpperCase() ?? countryCode;
+
+    const flagSrc = `https://flagsapi.com/${countryCode}/flat/64.png`;
 
     const logoLight = job.employer_logo ?? "/images/default-logo.svg";
     const logoDark = job.employer_logo

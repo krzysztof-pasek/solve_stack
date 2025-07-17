@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -21,6 +22,28 @@ import {
     getUserStats,
     getUserTopTags,
 } from "@/lib/actions/user.action";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: { id: string };
+}): Promise<Metadata> {
+    const { id } = params;
+    const { success, data } = await getUser({ userId: id });
+
+    if (!success || !data?.user) {
+        return {
+            title: "User not found | Solvestack",
+            description: "This user does not exist.",
+        };
+    }
+
+    const { name, username, bio } = data.user;
+    return {
+        title: `${name} (@${username}) | Solvestack`,
+        description: bio ?? `${name}'s profile on Solvestack.`,
+    };
+}
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
     const { id } = await params;

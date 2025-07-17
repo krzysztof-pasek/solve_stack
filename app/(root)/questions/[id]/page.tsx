@@ -1,5 +1,4 @@
-// import { Metadata } from "next";
-
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
@@ -23,45 +22,25 @@ import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
-// export async function generateMetadata({
-//     params,
-// }: RouteParams): Promise<Metadata> {
-//     const { id } = await params;
-//     const { data: q } = await getQuestion({ questionId: id });
+export async function generateMetadata({
+    params,
+}: RouteParams): Promise<Metadata> {
+    const { id } = await params;
 
-//     if (!q) {
-//         return {
-//             title: "Question not found",
-//             description: "The question you are looking for does not exist.",
-//         };
-//     }
+    const { success, data: question } = await getQuestion({ questionId: id });
 
-//     const text = (q?.content?.trim() || "").replace(/<[^>]*>/g, "");
-//     const description = text ? text.slice(0, 160) : "A question on Solve-Stack";
+    if (!success || !question) {
+        return {
+            title: "Question not found",
+            description: "This question does not exist.",
+        };
+    }
 
-//     const imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/og?title=${encodeURIComponent(q.title)}`;
-
-//     console.log(imageUrl);
-
-//     return {
-//         title: q.title,
-//         description,
-//         openGraph: {
-//             title: q.title,
-//             description,
-//             url: `${process.env.NEXT_PUBLIC_SITE_URL}/questions/${q._id}`,
-//             siteName: "Solve-Stack",
-//             images: [{ url: imageUrl, width: 1200, height: 630, alt: q.title }],
-//             type: "article",
-//         },
-//         twitter: {
-//             card: "summary_large_image",
-//             title: q?.title,
-//             description,
-//             images: [imageUrl],
-//         },
-//     };
-// }
+    return {
+        title: question.title,
+        description: question.content.slice(0, 100),
+    };
+}
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     const { id } = await params;

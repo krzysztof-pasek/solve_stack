@@ -1,8 +1,15 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
 
 import { auth } from "@/auth";
 import QuestionForm from "@/components/forms/QuestionForm";
+
+export const metadata: Metadata = {
+    title: "Ask a question | Solvestack",
+    description:
+        "Have a question? Post it to the Solvestack community and get answers from experts.",
+};
 
 const AskQuestion = async () => {
     const session = await auth();

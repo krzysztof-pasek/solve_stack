@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
@@ -5,7 +6,12 @@ import ProfileForm from "@/components/forms/ProfileForm";
 import ROUTES from "@/constants/routes";
 import { getUser } from "@/lib/actions/user.action";
 
-const Page = async () => {
+export const metadata: Metadata = {
+    title: "Edit Profile | Solvestack",
+    description: "Update your profile information on Solvestack.",
+};
+
+const EditProfile = async () => {
     const session = await auth();
     if (!session?.user?.id) redirect(ROUTES.SIGN_IN);
 
@@ -21,4 +27,4 @@ const Page = async () => {
     );
 };
 
-export default Page;
+export default EditProfile;

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import UserCard from "@/components/cards/UserCard";
@@ -9,6 +10,12 @@ import { UserFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { EMPTY_USERS } from "@/constants/states";
 import { getUsers } from "@/lib/actions/user.action";
+
+export const metadata: Metadata = {
+    title: "Community | Solvestack",
+    description:
+        "See who's active in the Solvestack community and connect with other developers.",
+};
 
 const Community = async ({ searchParams }: RouteParams) => {
     const { page, pageSize, query, filter } = await searchParams;

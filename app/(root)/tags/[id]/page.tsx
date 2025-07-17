@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
@@ -8,7 +9,34 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getTagQuestions } from "@/lib/actions/tag.action";
 
-const Page = async ({ params, searchParams }: RouteParams) => {
+export async function generateMetadata({
+    params,
+}: {
+    params: { id: string };
+}): Promise<Metadata> {
+    const { id } = params;
+
+    const { success, data } = await getTagQuestions({
+        tagId: id,
+        page: 1,
+        pageSize: 1,
+    });
+
+    if (!success || !data?.tag) {
+        return {
+            title: "Tag not found | Solvestack",
+            description: "This tag does not exist.",
+        };
+    }
+
+    const { name } = data.tag;
+    return {
+        title: `${name} Tag | Solvestack`,
+        description: `View all questions tagged "${name}" on Solvestack.`,
+    };
+}
+
+const TagDetails = async ({ params, searchParams }: RouteParams) => {
     const { id } = await params;
     const { page, pageSize, query } = await searchParams;
 
@@ -57,4 +85,4 @@ const Page = async ({ params, searchParams }: RouteParams) => {
     );
 };
 
-export default Page;
+export default TagDetails;

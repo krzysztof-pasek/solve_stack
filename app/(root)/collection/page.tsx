@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
@@ -7,6 +9,12 @@ import { CollectionFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { EMPTY_COLLECTIONS } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collection.action";
+
+export const metadata: Metadata = {
+    title: "Saved Questions | Solvestack",
+    description:
+        "Browse and manage all the questions you've saved on Solvestack.",
+};
 
 interface SearchParams {
     searchParams: Promise<{ [key: string]: string }>;

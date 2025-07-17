@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import JobCard from "@/components/cards/JobCard";
@@ -6,6 +7,12 @@ import Pagination from "@/components/Pagination";
 import { getCountries, getJobs } from "@/lib/actions/job.action";
 
 // import { getLocation } from "@/lib/actions/job.action";
+
+export const metadata: Metadata = {
+    title: "Jobs | Solvestack",
+    description:
+        "Find developer jobs worldwide—filter by role, location, and more.",
+};
 
 const Jobs = async ({ searchParams }: RouteParams) => {
     const { query, location, page } = await searchParams;
