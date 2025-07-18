@@ -10,11 +10,13 @@ import User from "@/database/user.model";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-errors";
+import dbConnect from "../mongoose";
 import { SignInSchema, SignUpSchema } from "../validations";
 
 export async function signUpWithCredentials(
     params: AuthCredentials
 ): Promise<ActionResponse> {
+    await dbConnect();
     const validationResult = await action({ params, schema: SignUpSchema });
 
     if (validationResult instanceof Error) {
@@ -77,6 +79,7 @@ export async function signUpWithCredentials(
 export async function signInWithCredentials(
     params: Pick<AuthCredentials, "email" | "password">
 ): Promise<ActionResponse> {
+    await dbConnect();
     const validationResult = await action({ params, schema: SignInSchema });
 
     if (validationResult instanceof Error) {
