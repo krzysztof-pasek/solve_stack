@@ -20,7 +20,7 @@ const Tags = async ({ searchParams }: RouteParams) => {
 
     const { success, data, error } = await getTags({
         page: Number(page) || 1,
-        pageSize: Number(pageSize) || 10,
+        pageSize: Number(pageSize) || 9,
         query,
         filter,
     });
@@ -51,7 +51,7 @@ const Tags = async ({ searchParams }: RouteParams) => {
                 data={tags}
                 empty={EMPTY_TAGS}
                 render={(tags) => (
-                    <div className="mt-10 flex w-full flex-wrap gap-4">
+                    <div className="mt-10 flex w-full flex-wrap gap-4 justify-center">
                         {tags.map((tag) => (
                             <TagCard key={tag._id} {...tag} />
                         ))}

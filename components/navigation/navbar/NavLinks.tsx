@@ -9,31 +9,27 @@ import { SheetClose } from "@/components/ui/sheet";
 import { sidebarLinks } from "@/constants/links";
 import { cn } from "@/lib/utils";
 
-const NavLinks = ({
-    isMobileNav = false,
-    userId,
-}: {
-    isMobileNav?: boolean;
-    userId?: string;
-}) => {
+type Props = { isMobileNav?: boolean; userId?: string };
+
+const NavLinks = ({ isMobileNav = false, userId }: Props) => {
     const pathname = usePathname();
 
     return (
         <>
             {sidebarLinks.map((item) => {
+                const route =
+                    item.route === "/profile" && userId
+                        ? `/profile/${userId}`
+                        : item.route;
+
                 const isActive =
-                    (pathname.includes(item.route) && item.route.length > 1) ||
-                    pathname === item.route;
+                    (pathname.includes(route) && route.length > 1) ||
+                    pathname === route;
 
-                if (item.route === "/profile") {
-                    if (userId) item.route = `${item.route}/${userId}`;
-                    else return null;
-                }
-
-                const LinkComponent = (
+                const linkEl = (
                     <Link
-                        href={item.route}
-                        key={item.label}
+                        key={`${item.label}-${route}`}
+                        href={route}
                         className={cn(
                             isActive
                                 ? "primary-gradient rounded-lg text-light-900"
@@ -41,34 +37,30 @@ const NavLinks = ({
                             "flex items-center justify-start gap-4 bg-transparent p-4"
                         )}
                     >
-                        <>
-                            <Image
-                                src={item.imgURL}
-                                alt={item.label}
-                                width={20}
-                                height={20}
-                                className={cn({ "invert-colors": !isActive })}
-                            />
-                            <p
-                                className={cn(
-                                    isActive ? "base-bold" : "base-medium",
-                                    !isMobileNav && "max-lg:hidden"
-                                )}
-                            >
-                                {item.label}
-                            </p>
-                        </>
+                        <Image
+                            src={item.imgURL}
+                            alt={item.label}
+                            width={20}
+                            height={20}
+                            className={cn({ "invert-colors": !isActive })}
+                        />
+                        <p
+                            className={cn(
+                                isActive ? "base-bold" : "base-medium",
+                                !isMobileNav && "max-lg:hidden"
+                            )}
+                        >
+                            {item.label}
+                        </p>
                     </Link>
                 );
 
                 return isMobileNav ? (
-                    <SheetClose asChild key={item.route}>
-                        {LinkComponent}
+                    <SheetClose asChild key={route}>
+                        {linkEl}
                     </SheetClose>
                 ) : (
-                    <React.Fragment key={item.route}>
-                        {LinkComponent}
-                    </React.Fragment>
+                    <React.Fragment key={route}>{linkEl}</React.Fragment>
                 );
             })}
         </>
