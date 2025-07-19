@@ -13,7 +13,9 @@ A modern, full‑stack Stack Overflow clone with dark / light theme, AI‑assi
 **Live demo → [https://solve-stack.vercel.app](https://solve-stack.vercel.app)**
 **Admin credentials →** `admin@gmail.com` / `Admin123.` (dashboard toggle bottom‑left)
 
-![SolveStack preview](./docs/preview.png)
+![SolveStack preview light](./docs/HomePageLight.png)
+
+![SolveStack preview dark](./docs/HomePageDark.png)
 
 ## 📦 Table of Contents
 
@@ -46,17 +48,15 @@ My own additions:
 
 ## 📸 Screenshots
 
-| Home                 | Question                 | Admin Dashboard           |
-| -------------------- | ------------------------ | ------------------------- |
-| ![](./docs/home.png) | ![](./docs/question.png) | ![](./docs/dashboard.png) |
+- Screenshots are available under /docs or click here: [See all screenshots →](https://github.com/krzysztof-pasek/solve_stack/tree/main/docs)
 
 ## 🚀 Installation
 
 ```bash
 git clone https://github.com/krzysztof-pasek/solve_stack.git
 cd solve_stack
-npm install         # or npm install / yarn
-cp .env.example .env # fill in variables
+npm install
+cp .env.example .env
 npm run dev
 ```
 

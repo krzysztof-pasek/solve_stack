@@ -46,7 +46,7 @@ const JobsFilter: FC<JobsFilterProps> = ({ countriesList }) => {
     };
 
     return (
-        <div className="relative mt-11 flex w-full justify-between gap-5 max-sm:flex-col sm:items-center">
+        <div className="relative mt-5 flex w-full justify-between gap-5 max-sm:flex-col sm:items-center">
             <LocalSearch
                 route={pathname}
                 iconPosition="left"

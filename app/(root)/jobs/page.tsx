@@ -40,7 +40,7 @@ const Jobs = async ({ searchParams }: RouteParams) => {
         <div>
             <h1 className="h1-bold text-dark100_light900 text-3xl">Jobs</h1>
 
-            <section className="mt-11 mb-6 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+            <section className="mt-5 mb-6 flex justify-between gap-5 max-sm:flex-col sm:items-center">
                 <JobFilter countriesList={countries} />
             </section>
 
