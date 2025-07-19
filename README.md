@@ -102,6 +102,14 @@ npm run dev
     - [Date‑fns](https://date-fns.org/) & [Day.js](https://day.js.org/) for dates
     - ESLint, Prettier, Pino logging
 
+## ⚡️ Performance
+
+Scored with Chrome Lighthouse
+
+<p align="center">
+  <img src="performenceStats.png" alt="Lighthouse scores" width="400" />
+</p>
+
 ## 🧩 Functions
 
 - **Core Q\&A** – CRUD questions with tags, answers; vote & bookmark.
