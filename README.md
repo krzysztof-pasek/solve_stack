@@ -10,7 +10,9 @@
 
 A modern, full‑stack Stack Overflow clone with dark / light theme, AI‑assisted answers, and granular admin controls.
 
-**Live demo → [https://solve-stack.vercel.app](https://solve-stack.vercel.app)**
+**Live demo → [https://solve-stack-4c7d.vercel.app](https://solve-stack-4c7d.vercel.app)**
+
+
 **Admin credentials →** `admin@gmail.com` / `Admin123.` (dashboard toggle bottom‑left)
 
 ![SolveStack preview light](./docs/HomePageLight.png)
